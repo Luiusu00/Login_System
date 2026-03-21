@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sistema</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f4f6f9; --panel: #ffffff; --border: rgba(0,0,0,0.09);
+      --accent: #2563eb; --accent-dark: #1d4ed8; --accent-glow: rgba(37,99,235,0.14);
+      --text: #0f172a; --muted: rgba(15,23,42,0.45); --input-bg: #f8fafc; --radius: 8px;
+      --green: #16a34a; --green-bg: #f0fdf4; --green-border: #bbf7d0; --sidebar-w: 260px;
+    }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; }
+
+    /* Sidebar */
+    .sidebar {
+      width: var(--sidebar-w); background: var(--panel); border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100;
+      transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+    }
+    .sidebar-top { padding: 28px 24px 20px; border-bottom: 1px solid var(--border); position: relative; }
+    .sidebar-top::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--accent),#60a5fa); }
+    .brand-mark { font-size:10px; font-weight:600; letter-spacing:0.28em; text-transform:uppercase; color:var(--accent); }
+    .brand-name { font-size:20px; font-weight:700; letter-spacing:-0.02em; margin-top:4px; color:var(--text); }
+    .sidebar-user { display:flex; align-items:center; gap:12px; padding:18px 24px; border-bottom:1px solid var(--border); }
+    .avatar { width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,#2563eb,#60a5fa); display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700; color:#fff; flex-shrink:0; }
+    .user-info { overflow:hidden; }
+    .user-name { font-size:13px; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .user-email { font-size:11px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .sidebar-nav { flex:1; padding:16px 12px; display:flex; flex-direction:column; gap:2px; }
+    .nav-label { font-size:10px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); padding:10px 12px 6px; }
+    .nav-item {
+      display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:var(--radius);
+      cursor:pointer; transition:background 0.18s, color 0.18s; font-size:13.5px; font-weight:500; color:var(--muted);
+      border:none; background:transparent; font-family:'Plus Jakarta Sans',sans-serif; width:100%; text-align:left;
+    }
+    .nav-item svg { width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; flex-shrink:0; }
+    .nav-item:hover { background:var(--bg); color:var(--text); }
+    .nav-item.active { background:#eff6ff; color:var(--accent); font-weight:600; }
+    .nav-item.danger { color:#dc2626; }
+    .nav-item.danger:hover { background:#fef2f2; color:#b91c1c; }
+    .sidebar-footer { padding:16px 12px; border-top:1px solid var(--border); }
+
+    /* Main */
+    .main { margin-left:var(--sidebar-w); flex:1; display:flex; flex-direction:column; min-height:100vh; }
+    .topbar {
+      background:var(--panel); border-bottom:1px solid var(--border); padding:0 32px; height:60px;
+      display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:50;
+    }
+    .topbar-title { font-size:15px; font-weight:600; color:var(--text); }
+    .topbar-right { display:flex; align-items:center; gap:12px; }
+    .topbar-avatar {
+      width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,#2563eb,#60a5fa);
+      display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#fff; cursor:pointer;
+    }
+    .content { padding:36px 32px; flex:1; }
+    .page-header { margin-bottom:28px; }
+    .page-title { font-size:22px; font-weight:700; letter-spacing:-0.02em; color:var(--text); }
+    .page-sub { font-size:13px; color:var(--muted); margin-top:4px; }
+
+    /* Cards */
+    .card { background:var(--panel); border:1px solid var(--border); border-radius:12px; box-shadow:0 2px 12px rgba(0,0,0,0.05); overflow:hidden; }
+    .card-header { padding:18px 24px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; }
+    .card-header svg { width:16px; height:16px; stroke:var(--accent); fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+    .card-title { font-size:14px; font-weight:600; color:var(--text); }
+    .card-body { padding:24px; }
+    .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+
+    /* Profile */
+    .profile-top { display:flex; align-items:center; gap:20px; margin-bottom:28px; }
+    .avatar-lg {
+      width:68px; height:68px; border-radius:50%; background:linear-gradient(135deg,#2563eb,#60a5fa);
+      display:flex; align-items:center; justify-content:center; font-size:24px; font-weight:700; color:#fff;
+      flex-shrink:0; box-shadow:0 4px 18px rgba(37,99,235,0.28);
+    }
+    .profile-name { font-size:17px; font-weight:700; color:var(--text); }
+    .profile-email { font-size:13px; color:var(--muted); margin-top:2px; }
+    .badge { display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:600; padding:3px 10px; border-radius:20px; margin-top:6px; }
+    .badge-green { background:var(--green-bg); color:var(--green); border:1px solid var(--green-border); }
+    .badge-green::before { content:''; width:6px; height:6px; background:var(--green); border-radius:50%; }
+    .info-row { display:flex; justify-content:space-between; align-items:center; padding:13px 0; border-bottom:1px solid var(--border); }
+    .info-row:last-child { border-bottom:none; }
+    .info-label { font-size:12px; font-weight:600; color:var(--muted); }
+    .info-value { font-size:13.5px; font-weight:500; color:var(--text); }
+
+    /* Form */
+    .field { display:flex; flex-direction:column; gap:6px; margin-bottom:16px; }
+    label { font-size:12px; font-weight:600; letter-spacing:0.02em; color:var(--text); }
+    input[type="password"] {
+      background:var(--input-bg); border:1.5px solid var(--border); color:var(--text);
+      font-family:'Plus Jakarta Sans',sans-serif; font-size:14px; font-weight:400; padding:11px 14px;
+      border-radius:var(--radius); outline:none; transition:border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+    input::placeholder { color:rgba(15,23,42,0.28); }
+    input:focus { border-color:var(--accent); background:#fff; box-shadow:0 0 0 3px var(--accent-glow); }
+
+    /* Buttons */
+    .btn {
+      padding:11px 22px; background:var(--accent); color:#fff; border:none; border-radius:var(--radius);
+      font-family:'Plus Jakarta Sans',sans-serif; font-size:13.5px; font-weight:600; cursor:pointer;
+      transition:background 0.2s, transform 0.15s, box-shadow 0.2s; box-shadow:0 4px 14px rgba(37,99,235,0.24);
+    }
+    .btn:hover { background:var(--accent-dark); transform:translateY(-1px); box-shadow:0 6px 20px rgba(37,99,235,0.32); }
+    .btn:active { transform:translateY(0); }
+    .btn-ghost {
+      padding:11px 22px; background:transparent; color:var(--muted); border:1.5px solid var(--border);
+      border-radius:var(--radius); font-family:'Plus Jakarta Sans',sans-serif; font-size:13.5px; font-weight:500;
+      cursor:pointer; transition:color 0.2s, border-color 0.2s, background 0.2s;
+    }
+    .btn-ghost:hover { color:var(--text); border-color:rgba(0,0,0,0.2); background:#f8fafc; }
+    .btn-row { display:flex; align-items:center; gap:10px; margin-top:20px; }
+
+    /* Strength */
+    .strength-bar { height:3px; border-radius:3px; background:#e2e8f0; overflow:hidden; margin-top:6px; display:none; }
+    .strength-fill { height:100%; width:0%; border-radius:3px; transition:width 0.3s, background 0.3s; }
+    .strength-label { font-size:11px; font-weight:500; margin-top:4px; display:none; }
+
+    /* Messages */
+    .msg-erro { font-size:12px; font-weight:500; color:#dc2626; background:#fef2f2; border:1px solid #fecaca; border-radius:var(--radius); padding:9px 12px; display:none; margin-bottom:6px; }
+    .msg-erro.visivel { display:block; }
+    .msg-ok { font-size:12px; font-weight:500; color:var(--green); background:var(--green-bg); border:1px solid var(--green-border); border-radius:var(--radius); padding:9px 12px; display:none; margin-bottom:6px; }
+    .msg-ok.visivel { display:block; }
+
+    /* Modal */
+    .overlay { position:fixed; inset:0; background:rgba(15,23,42,0.45); backdrop-filter:blur(3px); z-index:200; display:none; align-items:center; justify-content:center; }
+    .overlay.active { display:flex; animation:fadeOverlay 0.2s ease; }
+    @keyframes fadeOverlay { from{opacity:0} to{opacity:1} }
+    .modal { background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:32px; width:380px; box-shadow:0 20px 60px rgba(0,0,0,0.18); animation:popModal 0.3s cubic-bezier(.22,.68,0,1.2); }
+    @keyframes popModal { from{opacity:0;transform:scale(0.93) translateY(10px)} to{opacity:1;transform:scale(1) translateY(0)} }
+    .modal-icon { width:48px; height:48px; background:#fef2f2; border:1.5px solid #fecaca; border-radius:12px; display:flex; align-items:center; justify-content:center; margin-bottom:16px; }
+    .modal-icon svg { width:22px; height:22px; stroke:#dc2626; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+    .modal-title { font-size:17px; font-weight:700; color:var(--text); margin-bottom:6px; }
+    .modal-sub { font-size:13px; color:var(--muted); line-height:1.6; margin-bottom:24px; }
+    .modal-btns { display:flex; gap:10px; }
+
+    /* Sections */
+    .section { display:none; }
+    .section.active { display:block; animation:fadeIn 0.25s ease; }
+    @keyframes fadeIn { from{opacity:0;transform:translateX(6px)} to{opacity:1;transform:translateX(0)} }
+
+    @media (max-width:700px) {
+      .sidebar { transform:translateX(-100%); }
+      .sidebar.open { transform:translateX(0); }
+      .main { margin-left:0; }
+      .grid-2 { grid-template-columns:1fr; }
+      .content { padding:24px 16px; }
+      .topbar { padding:0 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-top">
+      <div class="brand-mark">Plataforma</div>
+      <div class="brand-name">Meu Sistema</div>
+    </div>
+    <div class="sidebar-user">
+      <div class="avatar" id="sidebar-avatar"></div>
+      <div class="user-info">
+        <div class="user-name" id="sidebar-name">{{nome}}</div>
+        <div class="user-email" id="sidebar-email">{{email}}</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-label">Menu</div>
+      <button class="nav-item active" id="nav-perfil" onclick="showSection('perfil',this)">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Ver perfil
+      </button>
+      <button class="nav-item" id="nav-senha" onclick="showSection('senha',this)">
+        <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Alterar senha
+      </button>
+      <div class="nav-label" style="margin-top:8px">Conta</div>
+      <button class="nav-item danger" onclick="openLogout()">
+        <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sair da conta
+      </button>
+    </nav>
+    <div class="sidebar-footer">
+      <div style="font-size:11px;color:var(--muted);text-align:center;">Meu Sistema &copy; 2025</div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button onclick="toggleSidebar()" id="menu-btn" style="display:none;background:none;border:none;cursor:pointer;padding:4px">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text)" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <span class="topbar-title" id="topbar-title">Ver perfil</span>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-avatar" id="topbar-avatar" title="Meu perfil" onclick="showSection('perfil',document.getElementById('nav-perfil'))">US</div>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <!-- Perfil -->
+      <div class="section active" id="section-perfil">
+        <div class="page-header">
+          <div class="page-title">Meu Perfil</div>
+          <div class="page-sub">Informações da sua conta</div>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-header">
+              <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <span class="card-title">Dados pessoais</span>
+            </div>
+            <div class="card-body">
+              <div class="profile-top">
+                <div class="avatar-lg" id="profile-avatar-lg">US</div>
+                <div>
+                  <div class="profile-name">{{nome}}</div>
+                  <div class="profile-email">{{email}}</div>
+                  <span class="badge badge-green">Conta ativa</span>
+                </div>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Nome completo</span>
+                <span class="info-value">{{nome}}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">E-mail</span>
+                <span class="info-value">{{email}}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Status</span>
+                <span class="info-value" style="color:var(--green);font-weight:600;">Ativo</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <span class="card-title">Segurança</span>
+            </div>
+            <div class="card-body">
+              <div class="info-row">
+                <span class="info-label">Senha</span>
+                <span class="info-value">••••••••</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Último acesso</span>
+                <span class="info-value">Agora</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Autenticação</span>
+                <span class="info-value">E-mail + senha</span>
+              </div>
+              <div class="btn-row">
+                <button class="btn" onclick="{showSection('senha',document.getElementById('nav-senha'))}">Alterar senha</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alterar Senha -->
+      <div class="section" id="section-senha">
+        <div class="page-header">
+          <div class="page-title">Alterar Senha</div>
+          <div class="page-sub">Defina uma nova senha para sua conta</div>
+        </div>
+        <div class="card" style="max-width:460px">
+          <div class="card-header">
+            <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span class="card-title">Atualizar senha</span>
+          </div>
+          <div class="card-body">
+            <form method="POST"> {% csrf_token %}
+              <input type="hidden" name="acao" value="alterar_senha">
+              <div class="field">
+                <label>Senha atual</label>
+                <input type="password" name="senha_atual" id="senha-atual" placeholder="Digite sua senha atual"/>
+              </div>
+              <div class="field">
+                <label>Nova senha</label>
+                <input type="password" name="nova_senha" id="nova-senha" placeholder="Mínimo 8 caracteres" oninput="checkStrength(this.value)"/>
+                <div class="strength-bar"><div class="strength-fill" id="strength-fill"></div></div>
+                <div class="strength-label" id="strength-label"></div>
+              </div>
+              <div class="field">
+                <label>Confirmar nova senha</label>
+                <input type="password" name="conf_senha" id="conf-senha" placeholder="Repita a nova senha"/>
+              </div>
+              <div id="msg-senha-erro" class="msg-erro {% for m in messages %}{% if m.tags == 'error' %}visivel{% endif %}{% endfor %}">
+                {% for m in messages %}{% if m.tags == 'error' %}{{ m }}{% endif %}{% endfor %}
+              </div>
+              <div id="msg-senha-ok" class="msg-ok {% for m in messages %}{% if m.tags == 'success' %}visivel{% endif %}{% endfor %}">
+                {% for m in messages %}{% if m.tags == 'success' %}{{ m }}{% endif %}{% endfor %}
+              </div>
+              <div class="btn-row">
+                <button class="btn" type="submit">Salvar nova senha</button>
+                <button class="btn-ghost" type="reset" onclick="clearMsgs()">Cancelar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Modal Logout -->
+  <div class="overlay" id="overlay" onclick="closeLogout(event)">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal-icon">
+        <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </div>
+      <div class="modal-title">Sair da conta?</div>
+      <div class="modal-sub">Você será desconectado e redirecionado para a tela de login. Deseja continuar?</div>
+      <div class="modal-btns">
+        <a href="{% url 'telaLogin' %}" class="btn" style="text-decoration:none;display:inline-flex;align-items:center;">Sim, sair</a>
+        <button class="btn-ghost" onclick="closeLogout()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function initAvatars() {
+      const nome = document.getElementById('sidebar-name').textContent.trim();
+      const iniciais = nome.split(' ').filter(Boolean).slice(0,2).map(p=>p[0]).join('').toUpperCase() || 'US';
+      ['sidebar-avatar','topbar-avatar','profile-avatar-lg'].forEach(id => {
+        document.getElementById(id).textContent = iniciais;
+      });
+    }
+    initAvatars();
+
+    function showSection(id, btn) {
+      document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+      document.getElementById('section-'+id).classList.add('active');
+      if(btn) btn.classList.add('active');
+      const titles = {perfil:'Ver perfil', senha:'Alterar senha'};
+      document.getElementById('topbar-title').textContent = titles[id]||id;
+      if(window.innerWidth<=700) document.getElementById('sidebar').classList.remove('open');
+    }
+
+    function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+    function checkMobile() { document.getElementById('menu-btn').style.display=window.innerWidth<=700?'block':'none'; }
+    window.addEventListener('resize', checkMobile); checkMobile();
+
+    function openLogout() { document.getElementById('overlay').classList.add('active'); }
+    function closeLogout(e) {
+      if(!e||e.target===document.getElementById('overlay')) document.getElementById('overlay').classList.remove('active');
+    }
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeLogout(); });
+
+    function validateSenha() {
+      const atual=document.getElementById('senha-atual').value;
+      const nova=document.getElementById('nova-senha').value;
+      const conf=document.getElementById('conf-senha').value;
+      const err=document.getElementById('msg-senha-erro');
+      const ok=document.getElementById('msg-senha-ok');
+      err.classList.remove('visivel'); ok.classList.remove('visivel');
+      if(!atual){err.textContent='Informe sua senha atual.';err.classList.add('visivel');return false;}
+      if(nova.length<8){err.textContent='A nova senha deve ter pelo menos 8 caracteres.';err.classList.add('visivel');return false;}
+      if(nova!==conf){err.textContent='As senhas não coincidem.';err.classList.add('visivel');return false;}
+      return true;
+    }
+
+    function clearMsgs() {
+      document.getElementById('msg-senha-erro').classList.remove('visivel');
+      document.getElementById('msg-senha-ok').classList.remove('visivel');
+      document.querySelector('.strength-bar').style.display='none';
+      document.getElementById('strength-label').style.display='none';
+    }
+
+    function checkStrength(val) {
+      const fill=document.getElementById('strength-fill');
+      const label=document.getElementById('strength-label');
+      const bar=document.querySelector('.strength-bar');
+      let s=0;
+      if(val.length>=8)s++; if(/[A-Z]/.test(val))s++; if(/[0-9]/.test(val))s++; if(/[^A-Za-z0-9]/.test(val))s++;
+      const c=['','#ef4444','#f97316','#eab308','#22c55e'];
+      const w=['0%','25%','50%','75%','100%'];
+      const l=['','Muito fraca','Fraca','Boa','Forte'];
+      if(!val.length){bar.style.display='none';label.style.display='none';}
+      else{bar.style.display='block';label.style.display='block';fill.style.width=w[s];fill.style.background=c[s];label.textContent=l[s];label.style.color=c[s];}
+    }
+  </script>
+</body>
+</html>

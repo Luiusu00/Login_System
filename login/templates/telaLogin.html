@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tela de Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f4f6f9;
+      --panel: #ffffff;
+      --border: rgba(0,0,0,0.09);
+      --accent: #2563eb;
+      --accent-dark: #1d4ed8;
+      --accent-glow: rgba(37,99,235,0.14);
+      --text: #0f172a;
+      --muted: rgba(15,23,42,0.45);
+      --input-bg: #f8fafc;
+      --radius: 8px;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card {
+      width: 420px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 0 0 40px;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.07);
+      animation: rise 0.55s cubic-bezier(.22,.68,0,1.2) both;
+    }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(18px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .card::before {
+      content: '';
+      display: block;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent), #60a5fa);
+      border-radius: 14px 14px 0 0;
+    }
+
+    .brand {
+      text-align: center;
+      padding: 32px 40px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .brand-mark {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .brand-name {
+      font-size: 26px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-top: 6px;
+      color: var(--text);
+    }
+    .brand-sub {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+    }
+    .tab {
+      flex: 1;
+      padding: 15px 0;
+      background: transparent;
+      border: none;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      cursor: pointer;
+      transition: color 0.2s;
+      position: relative;
+    }
+    .tab::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; left: 50%; right: 50%;
+      height: 2px;
+      background: var(--accent);
+      border-radius: 2px;
+      transition: left 0.3s cubic-bezier(.4,0,.2,1), right 0.3s cubic-bezier(.4,0,.2,1);
+    }
+    .tab.active { color: var(--accent); }
+    .tab.active::after { left: 18%; right: 18%; }
+
+    .forms { padding: 30px 40px 0; }
+
+    .form-panel {
+      display: none;
+      flex-direction: column;
+      gap: 16px;
+      animation: fadeIn 0.28s ease both;
+    }
+    .form-panel.active { display: flex; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateX(8px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    .field { display: flex; flex-direction: column; gap: 6px; }
+
+    label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      color: var(--text);
+    }
+
+    input {
+      background: var(--input-bg);
+      border: 1.5px solid var(--border);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      padding: 11px 14px;
+      border-radius: var(--radius);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+    input::placeholder { color: rgba(15,23,42,0.28); }
+    input:focus {
+      border-color: var(--accent);
+      background: #fff;
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    .forgot { text-align: right; margin-top: -4px; }
+    .forgot a {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--accent);
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .forgot a:hover { opacity: 0.75; }
+
+    .btn {
+      margin-top: 4px;
+      padding: 13px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 4px 18px rgba(37,99,235,0.28);
+    }
+    .btn:hover { background: var(--accent-dark); transform: translateY(-1px); box-shadow: 0 6px 24px rgba(37,99,235,0.36); }
+    .btn:active { transform: translateY(0); }
+
+    .terms {
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--muted);
+      line-height: 1.7;
+      text-align: center;
+      margin-top: 2px;
+    }
+    .terms a { color: var(--accent); text-decoration: none; font-weight: 500; }
+    .terms a:hover { text-decoration: underline; }
+
+    .strength-bar {
+      height: 3px;
+      border-radius: 3px;
+      background: #e2e8f0;
+      margin-top: 10px;
+      overflow: hidden;
+    }
+    .strength-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 3px;
+      transition: width 0.3s, background 0.3s;
+    }
+    .strength-label {
+    font-size: 11px;
+    font-weight: 500;
+    margin-top: 4px;
+    display: none;
+    transition: color 0.3s;
+    }
+    .msg-erro {
+    font-size: 12px;
+    font-weight: 500;
+    color: #dc2626;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: var(--radius);
+    padding: 9px 12px;
+    display: none;
+  }
+  .msg-erro.visivel { display: block; }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="brand">
+      <div class="brand-mark">Bem-vindo</div>
+      <div class="brand-name">Acesse sua conta</div>
+      <div class="brand-sub">Entre ou crie uma nova conta</div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('login', this)">Entrar</button>
+      <button class="tab" onclick="switchTab('register', this)">Cadastrar</button>
+    </div>
+
+    <div class="forms">
+
+      <!-- Login -->
+      <div class="form-panel active" id="form-login">
+        <form method="POST"> {% csrf_token %}
+          <div class="field">
+            <input type="hidden" name="acao" value="login">
+            <label>E-mail</label>
+            <input type="email" name="email" placeholder="seu@email.com" autocomplete="email"/>
+          </div>
+          <div class="field">
+            <label>Senha</label>
+            <input type="password" name="senha" placeholder="••••••••" autocomplete="current-password"/>
+            <div class="forgot"><a href="{% url 'new-password' %}">Esqueceu a senha?</a></div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:-4px;">
+              <div id="msg-erro" class="msg-erro
+                {% for m in messages %}{% if m.tags == 'error' %}visivel{% endif %}{% endfor %}">
+                {% for m in messages %}{% if m.tags == 'error' %}{{ m }}{% endif %}{% endfor %}
+              </div>
+            </div>
+            <button type="submit" class="btn">Entrar</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Cadastro -->
+      <div class="form-panel" id="form-register">
+        <form method="POST"> {% csrf_token %}
+          <div class="field">
+            <input type="hidden" name="acao" value="cadastro">
+            <label>Nome completo</label>
+            <input type="text" name="nome" placeholder="Seu nome" autocomplete="name"/>
+          </div>
+          <div class="field">
+            <label>E-mail</label>
+            <input type="email" name="email" placeholder="seu@email.com" autocomplete="email"/>
+          </div>
+          <div class="field">
+            <label>Senha</label>
+            <input type="password" name="senha" placeholder="Mínimo 8 caracteres" autocomplete="new-password" oninput="checkStrength(this.value)"/>
+            <div class="strength-bar" style="display:none"><div class="strength-fill" id="strength-fill"></div></div>
+            <div class="strength-label" id="strength-label"></div>
+          </div>
+          <div class="field">
+            <label>Confirmar senha</label>
+            <input type="password" name="confirmar_senha" placeholder="Repita a senha" autocomplete="new-password"/>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:-4px;">
+              <div id="msg-erro" class="msg-erro
+                {% for m in messages %}{% if m.tags == 'error' %}visivel{% endif %}{% endfor %}">
+                {% for m in messages %}{% if m.tags == 'error' %}{{ m }}{% endif %}{% endfor %}
+              </div>
+            </div>
+            <button type='submit' class="btn">Criar conta</button>
+          </div>
+        </form>
+        <p class="terms">Ao cadastrar, você concorda com nossos <a href="#">Termos de Uso</a> e <a href="#">Política de Privacidade</a>.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelector('#form-login .btn').addEventListener('click', function() {
+        const msg = document.getElementById('msg-erro');
+        msg.classList.remove('visivel');
+        msg.textContent = '';
+      });
+    });
+  
+    function switchTab(name, el) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.form-panel').forEach(p => p.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('form-' + name).classList.add('active');
+    }
+
+    function checkStrength(val) {
+    const fill  = document.getElementById('strength-fill');
+    const label = document.getElementById('strength-label');
+    const bar   = document.querySelector('.strength-bar');
+    let score = 0;
+    if (val.length >= 8) score++;
+    if (/[A-Z]/.test(val)) score++;
+    if (/[0-9]/.test(val)) score++;
+    if (/[^A-Za-z0-9]/.test(val)) score++;
+    const colors = ['', '#ef4444', '#f97316', '#eab308', '#22c55e'];
+    const widths  = ['0%', '25%', '50%', '75%', '100%'];
+    const labels  = ['', 'Muito fraca', 'Fraca', 'Boa', 'Forte'];
+    if (val.length === 0) {
+        bar.style.display   = 'none';
+        label.style.display = 'none';
+    } else {
+        bar.style.display   = 'block';
+        label.style.display = 'block';
+        fill.style.width      = widths[score];
+        fill.style.background = colors[score];
+        label.textContent     = labels[score];
+        label.style.color     = colors[score];
+    }
+    }
+  </script>
+</body>
+</html>
