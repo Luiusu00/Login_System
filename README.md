@@ -3,4 +3,4 @@ User authentication system built with Django — register, login, and password r
 
 giving-charm-production-d03a.up.railway.app
 
-#the verification code is not working yet! Please enter any 6 numbers.
+#the verification code is not working yet! Please enter any 6 numbers.#
