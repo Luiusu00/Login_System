@@ -1,9 +1,9 @@
-🔐 # Django Authentication System
+# Django Authentication System
 ## https://giving-charm-production-d03a.up.railway.app/
 A complete user authentication system built with Django, featuring a modern and responsive interface. Includes login, registration, password recovery, and a profile dashboard.
 The verification code is not working yet! Please enter any 6 numbers.
 
-✨ ## Features
+## Features
 + Login — email and password authentication with secure hashing
 + Registration — account creation with unique email validation and password confirmation
 + Password recovery — 3-step flow: email → verification code → new password
@@ -12,7 +12,7 @@ The verification code is not working yet! Please enter any 6 numbers.
 + Password strength indicator — real-time visual feedback
 + Feedback messages — inline error and success notifications
 
-🛠️ ## Tech Stack
+## Tech Stack
 | Layer | Technology |
 | ----- | ---------- |
 | Backend | Python 3 / Django 6 |
@@ -22,7 +22,7 @@ The verification code is not working yet! Please enter any 6 numbers.
 | Deploy | Railway |
 | Frontend | HTML5, CSS3, Vanilla JavaScript |
 
-🚀 ## Running Locally
+## Running Locally
 Prerequisites
 + Python 3.10+
 + pip
@@ -65,7 +65,7 @@ python manage.py migrate
 python manage.py runserver
 ```
 
-🌐 ## Deployment (Railway)
+## Deployment (Railway)
 The project is configured for deployment on Railway. The following environment variables are required:
 | Variable | Description |
 | -------- | ----------- |
@@ -75,19 +75,19 @@ The project is configured for deployment on Railway. The following environment v
 | `DATABASE_URL` | PostgreSQL connection URL (provided by Railway) |
 Remember to update `CSRF_TRUSTED_ORIGINS` in `settings.py` with your deployment domain.
 
-🗺️ ## Routes
+## Routes
 | URL | View | Description |
 | --- | ---- | ----------- |
 | `/` | `telaLogin` | Login and registration page |
 | `/sistema` | `sistema` | User dashboard |
 | `new-password` | `newPassword` | Password recovery flow |
 
-🔒 ## Security
+## Security
 
 + Passwords stored with PBKDF2 hashing via Django's `make_password` / `check_password`
 + CSRF protection enabled on all forms
 + Session-based authentication to keep users logged in
 + WhiteNoise with `CompressedManifestStaticFilesStorage` for secure static file caching
 
-📄 ## License
+## License
 This project is licensed under the **MIT License.** See the LICENSE file for details.
