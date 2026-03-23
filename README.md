@@ -1,4 +1,5 @@
-🔐 # [Django Authentication System](https://giving-charm-production-d03a.up.railway.app/)
+🔐 # Django Authentication System
+## https://giving-charm-production-d03a.up.railway.app/
 A complete user authentication system built with Django, featuring a modern and responsive interface. Includes login, registration, password recovery, and a profile dashboard.
 The verification code is not working yet! Please enter any 6 numbers.
 
