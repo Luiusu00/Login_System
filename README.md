@@ -4,13 +4,13 @@ A complete user authentication system built with Django, featuring a modern and 
 The verification code is not working yet! Please enter any 6 numbers.
 
 ## Features
-+ Login — email and password authentication with secure hashing
-+ Registration — account creation with unique email validation and password confirmation
-+ Password recovery — 3-step flow: email → verification code → new password
-+ Dashboard — profile overview and password change while logged in
-+ Logout — with confirmation modal
-+ Password strength indicator — real-time visual feedback
-+ Feedback messages — inline error and success notifications
++ **Login** — email and password authentication with secure hashing
++ **Registration** — account creation with unique email validation and password confirmation
++ **Password recovery** — 3-step flow: email → verification code → new password
++ **Dashboard** — profile overview and password change while logged in
++ **Logout** — with confirmation modal
++ **Password** strength indicator — real-time visual feedback
++ **Feedback messages** — inline error and success notifications
 
 ## Tech Stack
 | Layer | Technology |
