@@ -253,7 +253,7 @@
             <input type="password" name="senha" placeholder="••••••••" autocomplete="current-password"/>
             <div class="forgot"><a href="{% url 'new-password' %}">Esqueceu a senha?</a></div>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-top:-4px;">
-              <div id="msg-erro" class="msg-erro
+              <div id="msg-erro-login" class="msg-erro
                 {% for m in messages %}{% if m.tags == 'error' %}visivel{% endif %}{% endfor %}">
                 {% for m in messages %}{% if m.tags == 'error' %}{{ m }}{% endif %}{% endfor %}
               </div>
@@ -285,7 +285,7 @@
             <label>Confirmar senha</label>
             <input type="password" name="confirmar_senha" placeholder="Repita a senha" autocomplete="new-password"/>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-top:-4px;">
-              <div id="msg-erro" class="msg-erro
+              <div id="msg-erro-cadastro" class="msg-erro
                 {% for m in messages %}{% if m.tags == 'error' %}visivel{% endif %}{% endfor %}">
                 {% for m in messages %}{% if m.tags == 'error' %}{{ m }}{% endif %}{% endfor %}
               </div>
@@ -302,7 +302,7 @@
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       document.querySelector('#form-login .btn').addEventListener('click', function() {
-        const msg = document.getElementById('msg-erro');
+        const msg = document.getElementById('msg-erro-login');
         msg.classList.remove('visivel');
         msg.textContent = '';
       });
