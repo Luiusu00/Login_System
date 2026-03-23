@@ -103,6 +103,9 @@ def sistema(request):
         return render(request, 'sistema.html', {'nome': nome, 'email': email})
     
     if request.method == 'POST':
+        acao = request.POST.get('acao')
+        if acao != 'alterar_senha':
+            return reditect('sistema')
         email = request.session.get('usuario_email', '')
         nome = request.session.get('usuario_nome','')
         senha_atual = request.POST.get('senha_atual')
