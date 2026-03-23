@@ -23,16 +23,16 @@ The verification code is not working yet! Please enter any 6 numbers.
 | Frontend | HTML5, CSS3, Vanilla JavaScript |
 
 ## Running Locally
-Prerequisites
+**Prerequisites**
 + Python 3.10+
 + pip
 
-1. Clone the repository
+**1. Clone the repository**
 ```
 git clone https://github.com/your-username/your-repository.git
 cd your-repository
 ```
-2. Create and activate a virtual environment
+**2. Create and activate a virtual environment**
 ```
 python -m venv venv
 
@@ -42,11 +42,11 @@ source venv/bin/activate
 # Windows
 venv\Scripts\activate
 ```
-3. Install dependencies
+**3. Install dependencies**
 ```
 pip install -r requirements.txt
 ```
-4. Set up environment variables
+**4. Set up environment variables**
 Create a .env file at the project root:
 ```
 SECRET_KEY=your-secret-key-here
@@ -56,11 +56,11 @@ ALLOWED_HOSTS=localhost,127.0.0.1
 # Optional: use PostgreSQL locally
 # DATABASE_URL=postgres://user:password@localhost:5432/db_name
 ```
-5. Run migrations
+**5. Run migrations**
 ```
 python manage.py migrate
 ```
-6. Start the development server
+**6. Start the development server**
 ```
 python manage.py runserver
 ```
