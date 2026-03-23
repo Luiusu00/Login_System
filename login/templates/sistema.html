@@ -356,19 +356,6 @@
     }
     document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeLogout(); });
 
-    function validateSenha() {
-      const atual=document.getElementById('senha-atual').value;
-      const nova=document.getElementById('nova-senha').value;
-      const conf=document.getElementById('conf-senha').value;
-      const err=document.getElementById('msg-senha-erro');
-      const ok=document.getElementById('msg-senha-ok');
-      err.classList.remove('visivel'); ok.classList.remove('visivel');
-      if(!atual){err.textContent='Informe sua senha atual.';err.classList.add('visivel');return false;}
-      if(nova.length<8){err.textContent='A nova senha deve ter pelo menos 8 caracteres.';err.classList.add('visivel');return false;}
-      if(nova!==conf){err.textContent='As senhas não coincidem.';err.classList.add('visivel');return false;}
-      return true;
-    }
-
     function clearMsgs() {
       document.getElementById('msg-senha-erro').classList.remove('visivel');
       document.getElementById('msg-senha-ok').classList.remove('visivel');
