@@ -1,5 +1,5 @@
 # Django Authentication System
-## https://giving-charm-production-d03a.up.railway.app/
+## ⚠️ Demo Offline — Portifolio Project
 A complete user authentication system built with Django, featuring a modern and responsive interface. Includes login, registration, password recovery, and a profile dashboard.
 The verification code is not working yet! Please enter any 6 numbers.
 
@@ -64,16 +64,6 @@ python manage.py migrate
 ```
 python manage.py runserver
 ```
-
-## Deployment (Railway)
-The project is configured for deployment on Railway. The following environment variables are required:
-| Variable | Description |
-| -------- | ----------- |
-| `SECRET_KEY` | Django Secret Key |
-| `DEBUG` | Set to `False` in production |
-| `ALLOWED_HOSTS` | Allowed domain(s) |
-| `DATABASE_URL` | PostgreSQL connection URL (provided by Railway) |
-Remember to update `CSRF_TRUSTED_ORIGINS` in `settings.py` with your deployment domain.
 
 ## Routes
 | URL | View | Description |
