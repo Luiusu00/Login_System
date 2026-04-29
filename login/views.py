@@ -105,7 +105,7 @@ def sistema(request):
     if request.method == 'POST':
         acao = request.POST.get('acao')
         if acao != 'alterar_senha':
-            return reditect('sistema')
+            return redirect('sistema')
         email = request.session.get('usuario_email', '')
         nome = request.session.get('usuario_nome','')
         senha_atual = request.POST.get('senha_atual')
@@ -124,3 +124,7 @@ def sistema(request):
         else:
             messages.error(request, 'A senha atual não coincide!')
             return render(request, 'sistema.html', {'nome': nome, 'email': email})
+
+def logout(request):
+    request.session.flush()
+    return redirect('telaLogin')
